@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Neumórfica v1.0</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    
+/* obtener el estilo de fuente de la api de google fonts */
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:600,700");
+
+/* estilos base para todo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #e9e9e9;
+    /*fuente: "Fira Mono", monospace, sans-serif, Arial, Helvetica;*/
+    font-family: 'Open Sans',sans-serif;
+}
+
+/* estilos para la sección de cuerpo */
+body{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* estilos para el contenedor de la calculadora */
+main {
+    padding: 2rem;
+    border-radius: 30px;
+    box-shadow: -6px -6px 9px #FFF,
+                 6px 6px 9px rgba(0, 0, 0, 0.4);
+}
+
+/* estilos para el botón en el contenedor de la calculadora */
+main, button {
+    outline: none;
+}
+
+/* base styling for the result area wrapper */
+#result_area {
+    width: 320px;
+    height: 20vh;
+    padding: 16px 32px;
+    text-align: right;
+    border: none;
+    border-radius: 40px;
+    text-shadow: -1px -1px 2px #FFF,
+                  2px 2px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: inset -6px -6px 9px #FFF,
+                inset 6px 6px 9px rgba(0, 0, 0, 0.4);
+    overflow:auto;
+}
+
+/* styling for calculator history section */
+#history {
+    margin-top: 5px;
+    font-size: 15px;
+    color: #919191;
+}
+
+/* styling for calculator output section */
+#output {
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+/* grid styling to arrange the calculator keys */
+main .keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 0.8rem;
+    margin-top: 20px;
+}
+
+/* other stylings (neumorphism included) for calculator buttons */
+main button {
+    font-size: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    box-shadow: -6px -6px 9px #FFF,
+                6px 6px 9px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    background: #e9e9e9;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* pseudostyling for button */
+button:hover, button:active {
+    background-color: #ccc;
+}
+
+
+/* pseudostyling for button */
+button:active {
+    box-shadow: inset -1px -1px 9px #FFF,
+                inset 1px 1px 9px rgba(0, 0, 0, 0.4);
+}
+
+/* operator keys color style */
+.op__key, .eq__key {
+    color: #ff652f;
+}
+
+/* styling for footer section */
+footer p {
+    font-size: smaller;
+    padding-top: 20px;
+    text-align: center;
+    color: #ff652f;    
+}
+   
+    </style>
+</head>
+<body>
+<script>
+Swal.fire({
+  title: "Calculadora Neumórfica v1.0", 
+  text: "Creado por Andrés Programmer",
+  confirmButtonText: "OK",
+});
+</script>
+
+    <main>
+        <div id="result_area">
+            <div id="history">
+                <p></p>
+            </div>
+            <div id="output">
+                <p></p>
+            </div>
+        </div>
+        <div class="keys">
+            <button class="op__key" id="clear">C</button>
+            <button class="op__key" id="backspace">DEL</button>
+            <button class="op__key" id="%">%</button>
+            <button class="op__key" id="/">&#247;</button>
+            <button class="num__key" id="7">7</button>
+            <button class="num__key" id="8">8</button>
+            <button class="num__key" id="9">9</button>
+            <button class="op__key" id="*">&times;</button>
+            <button class="num__key" id="4">4</button>
+            <button class="num__key" id="5">5</button>
+            <button class="num__key" id="6">6</button>
+            <button class="op__key" id="-">-</button>
+            <button class="num__key" id="1">1</button>
+            <button class="num__key" id="2">2</button>
+            <button class="num__key" id="3">3</button>
+            <button class="op__key" id="+">+</button>
+            <button class="op__key" id=".">•</button>
+            <button class="num__key" id="0">0</button>
+            <form action="" target="_blank">
+                <button class="num__key" id=""><action="">👤</button></form>
+            <button class="op__key" id="=">=</button>
+        </div>
+            <br />
+        <footer>
+            <p><em>Creado por Andrés Alvarez @ Marzo de 2024</em></p>
+        </footer>
+    </main>
+    <script>
+      
+
+// leer el valor de historial desde la interfaz de usuario
+function getHistoryValue(){
+    return document.getElementById("history").innerText;
+}
+
+// escribir cosas en el área de historial en la interfaz de usuario
+function printHistoryValue(num){
+    document.getElementById("history").innerText = num;
+}
+
+// leer el valor de salida desde la interfaz de usuario
+function getOutputValue(){
+    return document.getElementById("output").innerText;
+}
+
+// escribir cosas en el área de salida en la interfaz de usuario 
+function printOutputValue(num){
+    if (num === ""){
+        document.getElementById("output").innerText = num;
+    }
+    else{
+        document.getElementById("output").innerText = getFormattedNumber(num);
+    }
+}
+
+// formatea elegantemente el valor de cadena de salida a un valor separado por comas 
+function getFormattedNumber(num){
+    if (num == "-"){
+        return "";
+    }
+    var n = Number(num);
+    var value = n.toLocaleString("en");
+    return value;
+}
+
+// elimina el formato de separación de comas de la salida formateada
+function reverseNumberFormat(num){
+    return Number(num.replace(/,/g, ""));
+}
+
+addEventListener("DOMContentLoaded", function() {
+
+// escuchar eventos de clic de teclas de operador
+var operators = document.getElementsByClassName("op__key");
+var len = operators.length;
+for (i=0; i<len; i++){
+    operators[i].addEventListener("click", function(){
+        if (this.id == "clear"){
+            printHistoryValue("");
+            printOutputValue("");
+        }
+        else if (this.id == "backspace"){
+            var output = reverseNumberFormat(getOutputValue()).toString();
+            // verifica si la salida tiene un valor, luego elimina el último carácter y lo imprime en la interfaz de usuario
+            if (output){
+                output = output.substr(0, output.length - 1);
+                printOutputValue(output);
+            }
+        }
+        else{
+            var output = getOutputValue();
+            var history = getHistoryValue();
+            // truncar el último carácter de tipo no numérico del valor de historial
+            if (output === "" && history !== ""){
+                if (isNaN(history[history.length - 1])){
+                    history = history.substr(0, history.length - 1);
+                }
+            }
+            if (output !== "" || history !== ""){
+                // operación ternaria para establecer la salida en vacío cuando está vacía
+                output = output === ""? output : reverseNumberFormat(output);
+                history += output;
+                if (this.id === "="){
+                    var result = eval(history);
+                    printOutputValue(result);
+                    printHistoryValue("");
+                }
+                else{
+                    history += this.id;
+                    printHistoryValue(history);
+                    printOutputValue("");
+                }
+            }
+        }
+    })
+}
+
+// escuchar eventos de clic de teclas de número
+var numbers = document.getElementsByClassName("num__key");
+var val = numbers.length;
+for (i=0; i<val; i++){
+    numbers[i].addEventListener("click", function(){
+        var output = getOutputValue();
+        if (!isNaN(output)) {
+            output += this.id;
+            printOutputValue(output);
+        } else {
+            printOutputValue(this.id);
+        }
+    })
+}
+});
+  
+    </script>
+</body>
+</html>
